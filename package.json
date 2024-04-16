@@ -1,0 +1,37 @@
+{
+  "name": "solidity-token-erc721-cards",
+  "version": "1.0.0",
+  "description": "A basic ERC20 token contract.",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-foundry": "1.1.1",
+    "@nomicfoundation/hardhat-toolbox": "5.0.0",
+    "@types/node": "20.12.7",
+    "hardhat": "2.22.2",
+    "typescript": "5.4.5"
+  },
+  "dependencies": {
+    "canvas": "2.11.2",
+    "ethers": "6.12.0",
+    "image-size": "1.1.1",
+    "ipfs-http-client": "56.0.3",
+    "keccak256": "1.0.6",
+    "lodash": "4.17.21",
+    "merkletreejs": "0.3.11",
+    "nft.storage": "7.1.1",
+    "sharp": "0.33.3"
+  },
+  "resolutions": {
+    "ipfs-http-client@34.0.0>concat-stream": "github:mihirgupta0900/concat-stream#master"
+  }
+}
