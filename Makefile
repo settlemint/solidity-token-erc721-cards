@@ -1,6 +1,10 @@
 # Makefile for Foundry Ethereum Development Toolkit
 
-.PHONY: build test format snapshot anvil deploy deploy-anvil cast help subgraph clear-anvil-port
+.PHONY: artengine build test format snapshot anvil deploy deploy-anvil cast help subgraph clear-anvil-port
+
+artengine:
+	@echo "Generating assets..."
+	@npx hardhat generate-assets --common 10 --limited 5 --rare 2 --unique 1 --ipfsnode "nodeKeyHere"
 
 build:
 	@echo "Building with Forge..."
