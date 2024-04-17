@@ -8,7 +8,7 @@ task('check-images', 'Checks if images have been generated').setAction(
       .map((subject) => {
         return subject.replace(/\.[^/.]+$/, '');
       });
-
+    console.log(images.length > 0);
     return images.length > 0;
   }
 );

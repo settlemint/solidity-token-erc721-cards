@@ -22,7 +22,9 @@
     "canvas": "^2.11.2",
     "image-size": "^1.1.1",
     "ipfs-http-client": "^56.0.3",
+    "keccak256": "^1.0.6",
     "lodash": "^4.17.21",
+    "merkletreejs": "^0.3.11",
     "nft.storage": "^7.1.1",
     "sharp": "^0.33.3"
   },

@@ -1,10 +1,16 @@
 # Makefile for Foundry Ethereum Development Toolkit
 
-.PHONY: artengine build test format snapshot anvil deploy deploy-anvil cast help subgraph clear-anvil-port
+.PHONY: artengine  build test format snapshot anvil anvil-setup deploy deploy-anvil cast help subgraph clear-anvil-port
 
 artengine:
 	@echo "Generating assets..."
-	@npx hardhat generate-assets --common 10 --limited 5 --rare 2 --unique 1 --ipfsnode "nodeKeyHere"
+	@npx hardhat generate-assets --common 10 --limited 5 --rare 2 --unique 1 --ipfsnode $${BTP_IPFS}
+
+chainId-anvil:
+	@echo "Get chain id..."
+	@CHAIN_ID=$(shell cast chain-id --rpc-url anvil) ; \
+	echo "The chain ID is $$CHAIN_ID" ; \
+	npx hardhat opensea-proxy-address --chainid $${CHAIN_ID}
 
 build:
 	@echo "Building with Forge..."
@@ -26,6 +32,17 @@ anvil:
 	@echo "Starting Anvil local Ethereum node..."
 	@make clear-anvil-port
 	@anvil
+
+anvil-setup:
+	@echo "Deploying with Forge to Anvil..."
+	@IMAGES_EXIST=$$(npx hardhat check-images) ; \
+	if [ "$$IMAGES_EXIST" = "true" ]; then \
+		npx hardhat placeholder --ipfsnode $${BTP_IPFS} ; \
+		npx hardhat opensea-proxy-address --chainid $(shell cast chain-id --rpc-url anvil) ;
+	else \
+		echo "\033[1;31mERROR: You have not created any assets, aborting...\033[0m"; \
+		exit 1; \
+	fi
 
 deploy-anvil:
 	@echo "Deploying with Forge to Anvil..."
