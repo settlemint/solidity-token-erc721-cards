@@ -91,7 +91,7 @@ btp-setup:
 			args="$$args --legacy"; \
 		fi; \
 		echo $${args};\
-		forge create ./src/MetaDog.sol:MetaDog  --rpc-url $${BTP_RPC_URL} $$args --constructor-args "MetaDog" "MTD" $$PLACE_HOLDER $$PROXY_ADDRESS 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 | tee deployment.txt; \
+		forge create ./src/MetaDog.sol:MetaDog  $${EXTRA_ARGS} --rpc-url $${BTP_RPC_URL} $$args --constructor-args "MetaDog" "MTD" $$PLACE_HOLDER $$PROXY_ADDRESS 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 | tee deployment.txt; \
 	else \
 		echo "\033[1;31mERROR: You have not created any assets, aborting...\033[0m"; \
 		exit 1; \
@@ -115,7 +115,7 @@ btp-collect-reserve:
 		args="$$args --legacy"; \
 	fi; \
 	echo $$args; \
-	cast send --rpc-url $${BTP_RPC_URL} $$args $$(grep "Deployed to:" deployment.txt | awk '{print $$3}') "collectReserves()"
+	cast send $${EXTRA_ARGS} --rpc-url $${BTP_RPC_URL} $$args $$(grep "Deployed to:" deployment.txt | awk '{print $$3}') "collectReserves()"
 
 btp-launch-presale:
 	@echo "Launching presale..."
