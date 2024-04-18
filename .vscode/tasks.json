@@ -37,27 +37,57 @@
       "problemMatcher": []
     },
     {
-      "label": "deploy-anvil",
+      "label": "anvil-setup",
       "type": "shell",
-      "command": "make deploy-anvil",
+      "command": "make anvil-setup",
       "problemMatcher": []
     },
     {
-      "label": "deploy-btp",
+      "label": "btp-setup",
       "type": "shell",
-      "command": "EXTRA_ARGS=\"${input:extra-deployment-verify} ${input:extra-deployment-other}\" make deploy-btp",
+      "command": "EXTRA_ARGS=\"${input:extra-deployment-verify} ${input:extra-deployment-other}\" make btp-setup",
       "problemMatcher": []
     },
     {
-      "label": "script-anvil",
+      "label": "anvil-collect-reserve",
       "type": "shell",
-      "command": "EXTRA_ARGS=\"${input:extra-script-broadcast} ${input:extra-script-other}\" make script-anvil",
+      "command": "make anvil-collect-reserve",
       "problemMatcher": []
     },
     {
-      "label": "script",
+      "label": "btp-collect-reserve",
       "type": "shell",
-      "command": "EXTRA_ARGS=\"${input:extra-script-broadcast} ${input:extra-script-other}\" make script",
+      "command": "make btp-collect-reserve",
+      "problemMatcher": []
+    },
+    {
+      "label": "whitelist",
+      "type": "shell",
+      "command": "make whitelist",
+      "problemMatcher": []
+    },
+    {
+      "label": "anvil-launch-presale",
+      "type": "shell",
+      "command": "make anvil-launch-presale",
+      "problemMatcher": []
+    },
+    {
+      "label": "btp-launch-presale",
+      "type": "shell",
+      "command": "make btp-launch-presale",
+      "problemMatcher": []
+    },
+    {
+      "label": "anvil-launch-publicsale",
+      "type": "shell",
+      "command": "make anvil-launch-publicsale",
+      "problemMatcher": []
+    },
+    {
+      "label": "btp-launch-publicsale",
+      "type": "shell",
+      "command": "make btp-launch-publicsale",
       "problemMatcher": []
     },
     {
@@ -90,7 +120,10 @@
       "description": "Broadcast?",
       "default": "",
       "type": "pickString",
-      "options": ["", "--broadcast"]
+      "options": [
+        "",
+        "--broadcast"
+      ]
     },
     {
       "id": "extra-script-other",

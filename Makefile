@@ -115,7 +115,7 @@ btp-collect-reserve:
 		args="$$args --legacy"; \
 	fi; \
 	echo $$args; \
-	cast send $${EXTRA_ARGS} --rpc-url $${BTP_RPC_URL} $$args $$(grep "Deployed to:" deployment.txt | awk '{print $$3}') "collectReserves()"
+	cast send  --rpc-url $${BTP_RPC_URL} $$args $$(grep "Deployed to:" deployment.txt | awk '{print $$3}') "collectReserves()"
 
 btp-launch-presale:
 	@echo "Launching presale..."
@@ -134,7 +134,7 @@ btp-launch-presale:
 	if [ "$${BTP_EIP_1559_ENABLED}" = "false" ]; then \
 		args="$$args --legacy"; \
 	fi; \
-	cast send $${EXTRA_ARGS} --rpc-url $${BTP_RPC_URL} $$args $$(grep "Deployed to:" deployment.txt | awk '{print $$3}') "setWhitelistMerkleRoot(bytes32)" $$(jq -r '.root' ./assets/generated/whitelist.json) --value 0 --interactive
+	cast send --rpc-url $${BTP_RPC_URL} $$args $$(grep "Deployed to:" deployment.txt | awk '{print $$3}') "setWhitelistMerkleRoot(bytes32)" $$(jq -r '.root' ./assets/generated/whitelist.json) --value 0 --interactive
 
 btp-launch-publicsale:
 	@echo "Launching presale..."
@@ -153,7 +153,7 @@ btp-launch-publicsale:
 	if [ "$${BTP_EIP_1559_ENABLED}" = "false" ]; then \
 		args="$$args --legacy"; \
 	fi; \
-	cast send $${EXTRA_ARGS} --rpc-url $${BTP_RPC_URL} $$args $$(grep "Deployed to:" deployment.txt | awk '{print $$3}') "startPublicSale()" --value 0 --interactive
+	cast send --rpc-url $${BTP_RPC_URL} $$args $$(grep "Deployed to:" deployment.txt | awk '{print $$3}') "startPublicSale()" --value 0 --interactive
 
 btp-reveal:
 	@echo "Revealing..."
@@ -175,7 +175,7 @@ btp-reveal:
 		if [ "$${BTP_EIP_1559_ENABLED}" = "false" ]; then \
 			args="$$args --legacy"; \
 		fi; \
-		TOKEN_ADDRESS=$$(grep "Deployed to:" deployment-anvil.txt | awk '{print $$3}') REVEAL_TOKEN_URI=$$REVEAL_TOKEN_URI forge script script/PublicSaleScript.s.sol:PublicSaleScript $${EXTRA_ARGS} $$args --rpc-url ${BTP_RPC_URL}; \
+		TOKEN_ADDRESS=$$(grep "Deployed to:" deployment-anvil.txt | awk '{print $$3}') REVEAL_TOKEN_URI=$$REVEAL_TOKEN_URI forge script script/PublicSaleScript.s.sol:PublicSaleScript $$args --rpc-url ${BTP_RPC_URL}; \
 	else \
 		echo "\033[1;31mERROR: You have not created any assets, aborting...\033[0m"; \
 		exit 1; \
