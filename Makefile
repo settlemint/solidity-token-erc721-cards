@@ -1,6 +1,6 @@
 # Makefile for Foundry Ethereum Development Toolkit
 
-.PHONY: artengine  build test format snapshot anvil anvil-setup anvil-collect-reserve anvil-launch-presale anvil-launch-publicsale anvil-reveal whitelist deploy deploy-anvil cast help subgraph clear-anvil-port
+.PHONY: artengine  build test format snapshot anvil anvil-setup anvil-collect-reserve anvil-launch-presale anvil-launch-publicsale anvil-reveal btp-setup btp-collect-reserve btp-launch-presale btp-launch-publicsale btp-reveal whitelist deploy deploy-anvil cast help subgraph clear-anvil-port
 
 artengine:
 	@echo "Generating assets..."
