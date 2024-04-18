@@ -1,6 +1,6 @@
-# ERC20
+# ERC721 Trading Cards
 
-A basic ERC20 token contract.
+A trading cards NFT example.
 
 ## Get started
 
@@ -9,7 +9,7 @@ Launch this smart contract set in the SettleMint Blockchain Transformation platf
 If you want to use it separately, bootstrap a new project using
 
 ```shell
-forge init my-erc20-token --template settlemint/solidity-token-erc20
+forge init my-erc20-token --template settlemint/solidity-token-erc721-cards
 ```
 
 ## DX: Foundry
