@@ -9,7 +9,7 @@ Launch this smart contract set in the SettleMint Blockchain Transformation platf
 If you want to use it separately, bootstrap a new project using
 
 ```shell
-forge init my-erc20-token --template settlemint/solidity-token-erc721-cards
+forge init my-erc721-token --template settlemint/solidity-token-erc721-cards
 ```
 
 ## DX: Foundry
