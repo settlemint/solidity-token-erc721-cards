@@ -11,18 +11,6 @@ task('placeholder', 'Sets up the metadata and image for the pre-reveal stage')
         return subject.replace(/\.[^/.]+$/, '');
       });
 
-    console.log('');
-    console.log(
-      chalk.gray.dim(
-        '--------------------------------------------------------------------------'
-      )
-    );
-    console.log(
-      `Preparing ${chalk.yellow.bold(
-        images.length
-      )} placeholders for the pre-reveal stage:`
-    );
-
     const imageCID: string = await hre.run('ipfs-upload-file', {
       sourcepath: './assets/placeholder/placeholder.png',
       ipfspath: '/metadog-placeholder/placeholder.png',
@@ -49,20 +37,13 @@ task('placeholder', 'Sets up the metadata and image for the pre-reveal stage')
         ipfsnode,
       });
     }
-    console.log(`  Uploading metadata: ${chalk.green.bold(`DONE`)}`);
 
     const folderCID: string = await hre.run('ipfs-cid', {
       ipfspath: `/metadog-placeholder`,
       ipfsnode,
     });
-    console.log(`  baseTokenURI: ${chalk.green.bold(`ipfs://${folderCID}`)}`);
 
-    console.log(
-      chalk.gray.dim(
-        '--------------------------------------------------------------------------'
-      )
-    );
-    console.log('');
+    console.log(folderCID);
 
     return folderCID;
   });

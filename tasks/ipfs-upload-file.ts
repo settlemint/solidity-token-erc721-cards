@@ -49,7 +49,6 @@ async function ipfsUpload(
   }
   const { cid } = await ipfsClient.files.stat(filePath);
   await ipfsClient.pin.add(cid);
-  console.log(`       Uploaded ${filePath} to IPFS (${cid})`);
   return cid;
 }
 
