@@ -177,24 +177,6 @@ btp-reveal:
 		exit 1; \
 	fi
 
-deploy-btp:
-	@eval $$(curl -H "x-auth-token: $${BTP_SERVICE_TOKEN}" -s $${BTP_CLUSTER_MANAGER_URL}/ide/foundry/$${BTP_SCS_ID}/env | sed 's/^/export /'); \
-	args=""; \
-	if [ ! -z "$${BTP_FROM}" ]; then \
-		args="--unlocked --from $${BTP_FROM}"; \
-	else \
-		echo "\033[1;33mWARNING: No keys are activated on the node, falling back to interactive mode...\033[0m"; \
-		echo ""; \
-		args="--interactive"; \
-	fi; \
-	if [ ! -z "$${BTP_GAS_PRICE}" ]; then \
-		args="$$args --gas-price $${BTP_GAS_PRICE}"; \
-	fi; \
-	if [ "$${BTP_EIP_1559_ENABLED}" = "false" ]; then \
-		args="$$args --legacy"; \
-	fi; \
-	forge create ./src/Counter.sol:Counter $${EXTRA_ARGS} --rpc-url $${BTP_RPC_URL} $$args --constructor-args "GenericToken" "GT" | tee deployment.txt;
-
 cast:
 	@echo "Interacting with EVM via Cast..."
 	@cast $(SUBCOMMAND)
