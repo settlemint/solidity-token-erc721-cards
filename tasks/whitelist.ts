@@ -26,8 +26,8 @@ task('whitelist', 'Generates the whitelist MerkleRoot and proofs').setAction(
     const whiteListLeaves: Record<string, Buffer> = {};
     for (const [address, amount] of Object.entries(whitelist)) {
       whiteListLeaves[address] = Buffer.from(
-        ethers.utils
-          .solidityKeccak256(['address', 'string'], [address, amount])
+        ethers
+          .solidityPackedKeccak256(['address', 'string'], [address, amount])
           .slice(2),
         'hex'
       );

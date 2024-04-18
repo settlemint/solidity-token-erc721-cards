@@ -1,19 +1,21 @@
 // SPDX-License-Identifier: MIT
 // SettleMint.com
 
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.24;
 
-import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
-import {ERC721Enumerable, ERC721, IERC721} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
-import {ERC721Pausable} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721Pausable.sol";
-import {ERC721Burnable} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
-import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import {ERC721Royalty} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721Royalty.sol";
-import {ERC721Whitelist} from "./extensions/ERC721Whitelist.sol";
-import {ERC721Freezable} from "./extensions/ERC721Freezable.sol";
-import {ERC721MintPausable} from "./extensions/ERC721MintPausable.sol";
-import {ERC721OpenSeaGassLess} from "./extensions/ERC721OpenSeaGassLess.sol";
-import {ERC721Batch} from "./extensions/ERC721Batch.sol";
+import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
+import { ERC721 } from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import { IERC721 } from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import { ERC721Enumerable } from "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
+import { ERC721Pausable } from "@openzeppelin/contracts/token/ERC721/extensions/ERC721Pausable.sol";
+import { ERC721Burnable } from "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
+import { ReentrancyGuard } from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import { ERC721Royalty } from "@openzeppelin/contracts/token/ERC721/extensions/ERC721Royalty.sol";
+import { ERC721Whitelist } from "./extensions/ERC721Whitelist.sol";
+import { ERC721Freezable } from "./extensions/ERC721Freezable.sol";
+import { ERC721MintPausable } from "./extensions/ERC721MintPausable.sol";
+import { ERC721OpenSeaGassLess } from "./extensions/ERC721OpenSeaGassLess.sol";
+import { ERC721Batch } from "./extensions/ERC721Batch.sol";
 
 contract MetaDog is
     ERC721Enumerable,
@@ -34,7 +36,7 @@ contract MetaDog is
 
     uint256 public constant RESERVES = 5; // amount of tokens for the team, or to sell afterwards
     uint256 public constant PRICE_IN_WEI_WHITELIST = 0.0069 ether; // price per token in the whitelist sale
-    uint256 public constant PRICE_IN_WEI_PUBLIC = 0.0420 ether; // price per token in the public sale
+    uint256 public constant PRICE_IN_WEI_PUBLIC = 0.042 ether; // price per token in the public sale
     uint96 public constant ROYALTIES_IN_BASIS_POINTS = 500; // 5% royalties
     uint256 public constant MAX_PER_TX = 5; // maximum amount of tokens one can mint in one transaction
     uint256 public constant MAX_SUPPLY = 111; // the total amount of tokens for this NFT
@@ -60,7 +62,11 @@ contract MetaDog is
         string memory baseTokenURI_,
         address proxyRegistryAddress_,
         address payable wallet_
-    ) ERC721(name_, symbol_) ERC721OpenSeaGassLess(proxyRegistryAddress_) {
+    )
+        ERC721(name_, symbol_)
+        ERC721OpenSeaGassLess(proxyRegistryAddress_)
+        Ownable(msg.sender)
+    {
         _baseTokenURI = baseTokenURI_;
         _wallet = wallet_;
         _setDefaultRoyalty(wallet_, ROYALTIES_IN_BASIS_POINTS);
@@ -70,9 +76,7 @@ contract MetaDog is
     // CORE FUNCTIONS                                               //
     //////////////////////////////////////////////////////////////////
 
-    function setBaseURI(
-        string memory baseTokenURI_
-    ) public onlyOwner whenURINotFrozen {
+    function setBaseURI(string memory baseTokenURI_) public onlyOwner whenURINotFrozen {
         _baseTokenURI = baseTokenURI_;
     }
 
@@ -80,35 +84,27 @@ contract MetaDog is
         return _baseTokenURI;
     }
 
-    function tokenURI(
-        uint256 tokenId
-    ) public view virtual override returns (string memory) {
+    function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
         string memory tokenUri = super.tokenURI(tokenId);
-        return
-            bytes(tokenUri).length > 0
-                ? string(abi.encodePacked(tokenUri, ".json"))
-                : "";
+        return bytes(tokenUri).length > 0 ? string(abi.encodePacked(tokenUri, ".json")) : "";
     }
 
-    function _beforeTokenTransfer(
-        address from,
+    function _update(
         address to,
         uint256 tokenId,
-        uint256 batchSize
+        address auth
     )
         internal
-        override(ERC721, ERC721Enumerable, ERC721Pausable, ERC721MintPausable)
+        virtual
+        override(ERC721Enumerable, ERC721, ERC721Freezable, ERC721Pausable, ERC721MintPausable)
+        returns (address)
     {
-        super._beforeTokenTransfer(from, to, tokenId, batchSize);
+        // your code here
+        return super._update(to, tokenId, auth);
     }
 
-    function _afterTokenTransfer(
-        address from,
-        address to,
-        uint256 tokenId,
-        uint256 batchSize
-    ) internal override(ERC721, ERC721Freezable) {
-        super._afterTokenTransfer(from, to, tokenId, batchSize);
+    function _increaseBalance(address account, uint128 value) internal override(ERC721, ERC721Enumerable) {
+        super._increaseBalance(account, value);
     }
 
     //////////////////////////////////////////////////////////////////
@@ -135,31 +131,16 @@ contract MetaDog is
     // WHITELIST SALE                                               //
     //////////////////////////////////////////////////////////////////
 
-    function setWhitelistMerkleRoot(
-        bytes32 whitelistMerkleRoot_
-    ) external onlyOwner {
+    function setWhitelistMerkleRoot(bytes32 whitelistMerkleRoot_) external onlyOwner {
         _setWhitelistMerkleRoot(whitelistMerkleRoot_);
     }
 
-    function whitelistMint(
-        uint256 count,
-        uint256 allowance,
-        bytes32[] calldata proof
-    ) public payable nonReentrant {
+    function whitelistMint(uint256 count, uint256 allowance, bytes32[] calldata proof) public payable nonReentrant {
         require(_tokenId > 0, "Reserves not taken yet");
         require(_tokenId + count <= MAX_SUPPLY, "Exceeds max supply");
-        require(
-            _validateWhitelistMerkleProof(allowance, proof),
-            "Invalid Merkle Tree proof supplied"
-        );
-        require(
-            _addressToMinted[_msgSender()] + count <= allowance,
-            "Exceeds whitelist allowance"
-        );
-        require(
-            count * PRICE_IN_WEI_WHITELIST == msg.value,
-            "Invalid funds provided"
-        );
+        require(_validateWhitelistMerkleProof(allowance, proof), "Invalid Merkle Tree proof supplied");
+        require(_addressToMinted[_msgSender()] + count <= allowance, "Exceeds whitelist allowance");
+        require(count * PRICE_IN_WEI_WHITELIST == msg.value, "Invalid funds provided");
         _addressToMinted[_msgSender()] += count;
         for (uint256 i; i < count; i++) {
             _mint(_msgSender(), ++_tokenId);
@@ -181,10 +162,7 @@ contract MetaDog is
         require(_tokenId > 0, "Reserves not taken yet");
         require(_tokenId + count <= MAX_SUPPLY, "Exceeds max supply");
         require(count < MAX_PER_TX, "Exceeds max per transaction");
-        require(
-            count * PRICE_IN_WEI_PUBLIC == msg.value,
-            "Invalid funds provided"
-        );
+        require(count * PRICE_IN_WEI_PUBLIC == msg.value, "Invalid funds provided");
 
         for (uint256 i; i < count; i++) {
             _mint(_msgSender(), ++_tokenId);
@@ -203,12 +181,8 @@ contract MetaDog is
         return _wallet;
     }
 
-    function _burn(uint256 tokenId) internal override(ERC721, ERC721Royalty) {
-        super._burn(tokenId);
-    }
-
-    function burn(uint256 tokenId) public override {
-        _burn(tokenId);
+    function burn(uint256 tokenId) public override(ERC721Burnable) {
+        super.burn(tokenId);
     }
 
     function freeze() external onlyOwner {
@@ -219,9 +193,7 @@ contract MetaDog is
     // GASLESS LISTING FOR OPENSEA                                  //
     //////////////////////////////////////////////////////////////////
 
-    function setProxyRegistryAddress(
-        address proxyRegistryAddress_
-    ) external onlyOwner {
+    function setProxyRegistryAddress(address proxyRegistryAddress_) external onlyOwner {
         _setProxyRegistryAddress(proxyRegistryAddress_);
     }
 
@@ -261,22 +233,16 @@ contract MetaDog is
     // ERC165                                                       //
     //////////////////////////////////////////////////////////////////
 
-    function supportsInterface(
-        bytes4 interfaceId
-    )
+    function supportsInterface(bytes4 interfaceId)
         public
         view
         virtual
         override(ERC721, ERC721Enumerable, ERC721Royalty)
         returns (bool)
     {
-        return
-            interfaceId == type(Ownable).interfaceId ||
-            interfaceId == type(ERC721Burnable).interfaceId ||
-            interfaceId == type(ERC721Enumerable).interfaceId ||
-            interfaceId == type(ERC721Whitelist).interfaceId ||
-            interfaceId == type(ERC721Freezable).interfaceId ||
-            interfaceId == type(ERC721MintPausable).interfaceId ||
-            super.supportsInterface(interfaceId);
+        return interfaceId == type(Ownable).interfaceId || interfaceId == type(ERC721Burnable).interfaceId
+            || interfaceId == type(ERC721Enumerable).interfaceId || interfaceId == type(ERC721Whitelist).interfaceId
+            || interfaceId == type(ERC721Freezable).interfaceId || interfaceId == type(ERC721MintPausable).interfaceId
+            || super.supportsInterface(interfaceId);
     }
 }

@@ -15,7 +15,7 @@ task('reveal', 'Generates everything needed to reveal')
         ipfspath: `/metadog`,
         ipfsnode,
       });
-
+      console.log(folderCID);
       return folderCID;
     }
   );
