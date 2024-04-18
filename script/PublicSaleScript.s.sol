@@ -13,9 +13,7 @@ contract PublicSaleScript is Script {
 
         MetaDog token = MetaDog(tokenAddress); // Use the provided token address
 
-        token.setBaseURI(
-            string(abi.encodePacked("ipfs://", revealTokenURI, "/"))
-        );
+        token.setBaseURI(string(abi.encodePacked("ipfs://", revealTokenURI, "/")));
 
         console.log("baseURI set: ", "ipfs://", revealTokenURI);
 
@@ -29,7 +27,7 @@ contract PublicSaleScript is Script {
 
         // Freeze all tokens with specified gas limit
         console.log("Freezing all tokens...");
-        token.freezeAllTokens{gas: 400_000}();
+        token.freezeAllTokens{ gas: 400_000 }();
 
         vm.stopBroadcast(); // End broadcasting transactions
     }
