@@ -16,7 +16,9 @@
   "devDependencies": {
     "@nomicfoundation/hardhat-foundry": "^1.1.1",
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
-    "hardhat": "^2.22.2"
+    "@types/node": "^20.12.7",
+    "hardhat": "^2.22.2",
+    "typescript": "^5.4.5"
   },
   "dependencies": {
     "canvas": "^2.11.2",
