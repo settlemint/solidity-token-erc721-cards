@@ -17,7 +17,7 @@
     "@nomicfoundation/hardhat-foundry": "1.1.1",
     "@nomicfoundation/hardhat-toolbox": "5.0.0",
     "@types/node": "20.12.11",
-    "hardhat": "2.22.2",
+    "hardhat": "2.22.3",
     "typescript": "5.4.5"
   },
   "dependencies": {
