@@ -6,13 +6,13 @@ RUN curl -L https://foundry.paradigm.xyz | bash && \
 
 WORKDIR /
 
-COPY . /usecase
-
-WORKDIR /usecase
-
+RUN git config --global user.email "hello@settlemint.com" && \
+  git config --global user.name "SettleMint" && \
+  forge init usecase --template settlemint/solidity-token-erc721-cards && \
+  cd usecase && \
+  forge build
 RUN npm install
 RUN npx hardhat compile
-RUN forge build
 
 USER root
 
