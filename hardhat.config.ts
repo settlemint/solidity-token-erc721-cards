@@ -8,6 +8,16 @@ import './tasks/placeholder';
 import './tasks/reveal';
 import './tasks/opensea-proxy-address';
 import './tasks/whitelist';
+
+type IpfsNodeType = Record<
+  string,
+  {
+    headers: Record<string, string>;
+    url: string;
+    gateway: string;
+  }
+>;
+
 const config: HardhatUserConfig = {
   solidity: '0.8.24',
 };
