@@ -11,7 +11,6 @@ RUN git config --global user.email "hello@settlemint.com" && \
   forge init usecase --template settlemint/solidity-token-erc721-cards && \
   cd usecase && \
   forge build
-RUN npm install
 RUN npx hardhat compile
 
 USER root
