@@ -8,7 +8,7 @@
  *
  * SPDX-License-Identifier: UNLICENSED
  */
-pragma solidity ^0.8.26;
+pragma solidity 0.8.26;
 
 import { ERC721Enumerable } from "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 
