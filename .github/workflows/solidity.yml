@@ -39,4 +39,4 @@ jobs:
       docker-image-name: solidity-token-erc721-cards
       runs-on: solidity-token-erc721-cards
       ignition-module: 'ignition/modules/MetaDog.ts'
-      subgraph-contract-address-key: 'MetaDogModule#MetaDogModule'
+      subgraph-contract-address-key: 'MetaDogModule#MetaDog'
