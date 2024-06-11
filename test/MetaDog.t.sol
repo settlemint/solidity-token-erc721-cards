@@ -2,7 +2,7 @@
 pragma solidity ^0.8.17;
 
 import "forge-std/Test.sol";
-import "../src/MetaDog.sol";
+import "../contracts/MetaDog.sol";
 import "forge-std/console.sol";
 
 contract MetaDogTest is Test {
