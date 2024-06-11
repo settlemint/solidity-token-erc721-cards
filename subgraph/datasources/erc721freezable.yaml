@@ -14,7 +14,7 @@
         - ERC721TokenTrait
       abis:
         - name: ERC721Freezable
-          file: {root}//../out/ERC721Freezable.sol/ERC721Freezable.json
+          file: {root}/out/ERC721Freezable.sol/ERC721Freezable.json
         - name: IERC721
           file: {root}/node_modules/@openzeppelin/contracts/build/contracts/IERC721Metadata.json
       eventHandlers:
