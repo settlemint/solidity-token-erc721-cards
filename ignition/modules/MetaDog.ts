@@ -26,4 +26,5 @@ const MetaDogReserve = buildModule('MetaDogReserve', (m) => {
   return { metadog };
 });
 
-export { MetaDogModule, MetaDogReserve };
+export default MetaDogModule;
+export { MetaDogReserve };
