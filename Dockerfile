@@ -25,7 +25,7 @@ WORKDIR /usecase
 
 USER root
 
-RUN npm install
+RUN npm install --verbose
 RUN forge build
 RUN npx hardhat compile
 
