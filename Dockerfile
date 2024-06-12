@@ -12,6 +12,11 @@ ENV FOUNDRY_DIR /usr/local
 RUN curl -L https://foundry.paradigm.xyz | bash && \
   /usr/local/bin/foundryup
 
+RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
+export DEBIAN_FRONTEND=noninteractive && \
+apt-get update && \
+apt-get install -y --no-install-recommends build-essential jq python3 libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
+
 WORKDIR /
 
 COPY . /usecase
