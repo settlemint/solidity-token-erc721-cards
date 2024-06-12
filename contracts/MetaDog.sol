@@ -89,6 +89,13 @@ contract MetaDog is
         return bytes(tokenUri).length > 0 ? string(abi.encodePacked(tokenUri, ".json")) : "";
     }
 
+    function update(address to, uint256 tokenId, address auth)public returns(address) {
+        return _update(to, tokenId, auth);
+    }
+
+    function increaseBalance(address account, uint128 value) public {
+        _increaseBalance(account, value);
+    }
     function _update(
         address to,
         uint256 tokenId,
