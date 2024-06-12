@@ -1,5 +1,5 @@
 import hre from 'hardhat';
-import { MetaDogModule } from '../ignition/modules/MetaDog';
+import { default as MetaDogModule } from '../ignition/modules/MetaDog';
 
 import { network } from 'hardhat';
 
@@ -11,7 +11,7 @@ async function main() {
     chainid: chainId,
   });
 
-  await run('generate-assets', {});
+  await run('generate-assets');
 
   const placeholder: string = await run('placeholder', {
     amount: 1,
