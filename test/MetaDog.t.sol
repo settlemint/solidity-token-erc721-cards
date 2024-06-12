@@ -206,4 +206,21 @@ contract MetaDogTest is Test {
         vm.expectRevert();
         exampleERC721.increaseBalance(account, value);
     }
+
+    function testPauseUnpause() public {
+        vm.startPrank(owner);
+        exampleERC721.pause();
+        assertEq(exampleERC721.paused(), true);
+        exampleERC721.unpause();
+        assertEq(exampleERC721.paused(), false);
+    }
+
+    function testMintPauseUnpause() public {
+        vm.startPrank(owner);
+        exampleERC721.pauseMint();
+        assertEq(exampleERC721.mintPaused(), true);
+        exampleERC721.unpauseMint();
+        assertEq(exampleERC721.mintPaused(), false);
+
+    }
 }
