@@ -22,16 +22,6 @@ RUN npm install
 RUN forge build
 RUN npx hardhat compile
 
-# Final stage
-FROM node:20.13.1-bookworm
-
-# Install necessary runtime dependencies
-RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
-  export DEBIAN_FRONTEND=noninteractive && \
-  apt-get update && \
-  apt-get install -y --no-install-recommends libcairo2 libpango-1.0-0 libjpeg62-turbo libgif7 librsvg2-2 git
-
-# Set working directory
 WORKDIR /usecase
 
 # Copy the built artifacts from the build stage
