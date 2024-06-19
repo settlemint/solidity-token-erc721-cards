@@ -24,6 +24,7 @@
     "@graphprotocol/graph-ts": "0.35.1"
   },
   "dependencies": {
+    "@mapbox/node-pre-gyp": "^1.0.11",
     "@nomicfoundation/solidity-analyzer-linux-x64-gnu": "0.1.2",
     "canvas": "2.11.2",
     "ethers": "6.13.1",
