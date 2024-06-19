@@ -21,7 +21,12 @@ RUN npm install
 RUN forge build
 RUN npx hardhat compile
 
-FROM cgr.dev/chainguard/busybox:latest
+FROM node:20.14.0-bookworm
+
+RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
+  export DEBIAN_FRONTEND=noninteractive && \
+  apt-get update && \
+  apt-get install -y --no-install-recommends build-essential jq python3 libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev git
 
 COPY --from=build /usecase /usecase
 COPY --from=build /root/.svm /usecase-svm
