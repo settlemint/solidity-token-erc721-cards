@@ -24,7 +24,6 @@ RUN npx hardhat compile
 
 WORKDIR /usecase
 
-# Copy the built artifacts from the build stage
 COPY --from=build /usecase /usecase
 COPY --from=build /root/.svm /usecase-svm
 COPY --from=build /root/.cache /usecase-cache
