@@ -21,13 +21,19 @@ RUN npm install
 RUN forge build
 RUN npx hardhat compile
 
+# Second stage: Final image with dependencies
 FROM node:20.14.0-bookworm
 
+# Install the required libraries in the final image
 RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
   export DEBIAN_FRONTEND=noninteractive && \
   apt-get update && \
-  apt-get install -y --no-install-recommends build-essential jq python3 libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev git
+  apt-get install -y --no-install-recommends build-essential jq python3 libcairo2 libcairo2-dev libpango1.0-0 libpango1.0-dev libjpeg62-turbo libjpeg-dev libgif7 libgif-dev librsvg2-2 librsvg2-dev git
 
+# Copy the application from the build stage
 COPY --from=build /usecase /usecase
 COPY --from=build /root/.svm /usecase-svm
 COPY --from=build /root/.cache /usecase-cache
+
+# Ensure the library paths are set correctly
+RUN echo "/usr/local/lib" >> /etc/ld.so.conf.d/local.conf && ldconfig
