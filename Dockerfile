@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 FROM node:20.14.0-bookworm as dependencies
 
 RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
@@ -7,6 +8,9 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
   npm install -g pnpm@latest
 
 FROM node:20.14.0-bookworm as build
+=======
+FROM node:20.13.1-bookworm as dependencies
+>>>>>>> 6b625d1 (fix: docker & package)
 
 RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
 export DEBIAN_FRONTEND=noninteractive && \
