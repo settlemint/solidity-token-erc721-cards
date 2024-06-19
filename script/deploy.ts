@@ -10,9 +10,8 @@ async function main() {
   const proxyaddress = await run('opensea-proxy-address', {
     chainid: chainId,
   });
-  /* await run("generate-assets", {
-    ipfsnode: "ipfs-8b00",
-  });*/
+
+  await run('generate-assets', {});
 
   const placeholder: string = await run('placeholder', {
     amount: 1,

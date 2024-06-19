@@ -2,18 +2,12 @@
   "name": "solidity-token-erc721-cards",
   "version": "1.0.0",
   "description": "An ERC721 token contract with trading cards.",
-  "main": "index.js",
-  "directories": {
-    "lib": "lib",
-    "test": "test"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "SettleMint <hello@settlemint.com>",
+  "license": "MIT",
   "devDependencies": {
+    "@amxx/graphprotocol-utils": "1.1.0",
+    "@graphprotocol/graph-cli": "0.73.0",
+    "@graphprotocol/graph-ts": "0.35.1",
     "@nomicfoundation/hardhat-foundry": "1.1.2",
     "@nomicfoundation/hardhat-toolbox": "5.0.0",
     "@types/node": "20.14.5",
@@ -25,6 +19,10 @@
     "@openzeppelin/contracts": "5.0.2",
     "@openzeppelin/subgraphs": "0.1.8-5",
     "solhint": "5.0.1"
+  },
+  "overrides": {
+    "@graphprotocol/graph-cli": "0.73.0",
+    "@graphprotocol/graph-ts": "0.35.1"
   },
   "dependencies": {
     "canvas": "2.11.2",
