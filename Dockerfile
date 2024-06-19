@@ -22,7 +22,7 @@ RUN forge build
 RUN npx hardhat compile
 
 # Second stage: Final image with dependencies
-FROM node:20.14.0-bookworm
+FROM debian:bookworm-20230919-slim
 
 # Install the required libraries in the final image
 RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
@@ -34,6 +34,3 @@ RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
 COPY --from=build /usecase /usecase
 COPY --from=build /root/.svm /usecase-svm
 COPY --from=build /root/.cache /usecase-cache
-
-# Ensure the library paths are set correctly
-RUN echo "/usr/local/lib" >> /etc/ld.so.conf.d/local.conf && ldconfig
