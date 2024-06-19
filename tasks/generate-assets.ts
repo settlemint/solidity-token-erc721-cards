@@ -1,27 +1,21 @@
-import { createCanvas, loadImage, registerFont } from 'canvas';
-import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'fs';
-import { task, types } from 'hardhat/config';
-import sizeOf from 'image-size';
-import shuffle from 'lodash/shuffle';
-import { join } from 'path';
-import sharp from 'sharp';
+import { createCanvas, loadImage, registerFont } from "canvas";
+import { mkdirSync, readFileSync, readdirSync, writeFileSync } from "fs";
+import { task, types } from "hardhat/config";
+import sizeOf from "image-size";
+import shuffle from "lodash/shuffle";
+import { join } from "path";
+import sharp from "sharp";
 
-task('generate-assets', 'Generates everything needed to reveal')
+task("generate-assets", "Generates everything needed to reveal")
+  .addParam<number>("common", "the amount of commons to generate", 1, types.int)
   .addParam<number>(
-    'common',
-    'the amount of commons to generate',
-    10,
+    "limited",
+    "the amount of limited to generate",
+    1,
     types.int
   )
-  .addParam<number>(
-    'limited',
-    'the amount of limited to generate',
-    5,
-    types.int
-  )
-  .addParam<number>('rare', 'the amount of limited to generate', 2, types.int)
-  .addParam<number>('unique', 'the amount of limited to generate', 1, types.int)
-  .addParam<string>('ipfsnode', 'the key of the ipfs node to use')
+  .addParam<number>("rare", "the amount of limited to generate", 1, types.int)
+  .addParam<number>("unique", "the amount of limited to generate", 1, types.int)
   .setAction(
     async (
       {
@@ -29,20 +23,18 @@ task('generate-assets', 'Generates everything needed to reveal')
         limited,
         rare,
         unique,
-        ipfsnode,
       }: {
         common: number;
         limited: number;
         rare: number;
         unique: number;
-        ipfsnode: string;
       },
       hre
     ) => {
-      const subjects = readdirSync('./assets/layers/subjects/')
-        .filter((subject) => subject.includes('.png'))
+      const subjects = readdirSync("./assets/layers/subjects/")
+        .filter((subject) => subject.includes(".png"))
         .map((subject) => {
-          return subject.replace(/\.[^/.]+$/, '');
+          return subject.replace(/\.[^/.]+$/, "");
         });
 
       const toRandomize = [];
@@ -51,7 +43,7 @@ task('generate-assets', 'Generates everything needed to reveal')
         for (let commonIndex = 1; commonIndex <= common; commonIndex++) {
           toRandomize.push({
             subject,
-            rarity: 'common',
+            rarity: "common",
             cardindex: commonIndex,
             totalcards: common,
           });
@@ -59,23 +51,23 @@ task('generate-assets', 'Generates everything needed to reveal')
         for (let limitedIndex = 1; limitedIndex <= limited; limitedIndex++) {
           toRandomize.push({
             subject,
-            rarity: 'limited',
+            rarity: "limited",
             cardindex: limitedIndex,
-            totalcards: limited,
+            totalcards: common,
           });
         }
         for (let rareIndex = 1; rareIndex <= rare; rareIndex++) {
           toRandomize.push({
             subject,
-            rarity: 'rare',
+            rarity: "rare",
             cardindex: rareIndex,
-            totalcards: rare,
+            totalcards: common,
           });
         }
         for (let uniqueIndex = 1; uniqueIndex <= unique; uniqueIndex++) {
           toRandomize.push({
             subject,
-            rarity: 'unique',
+            rarity: "unique",
             cardindex: uniqueIndex,
             totalcards: unique,
           });
@@ -86,17 +78,16 @@ task('generate-assets', 'Generates everything needed to reveal')
 
       let index = 1;
       for (const { subject, rarity, cardindex, totalcards } of randomized) {
-        const imageCID: string = await hre.run('generate-asset', {
+        const imageCID: string = await hre.run("generate-asset", {
           subject,
           rarity,
           cardindex,
           totalcards,
           tokenId: index,
-          ipfsnode,
         });
 
         const metadata = JSON.parse(
-          readFileSync(`./assets/metadata/${subject}.json`, 'utf8')
+          readFileSync(`./assets/metadata/${subject}.json`, "utf8")
         );
 
         const finalMetadata = {
@@ -106,7 +97,7 @@ task('generate-assets', 'Generates everything needed to reveal')
           attributes: [
             ...metadata.attributes,
             {
-              trait_type: 'Rarity',
+              trait_type: "Rarity",
               value: rarity,
             },
           ],
@@ -117,10 +108,9 @@ task('generate-assets', 'Generates everything needed to reveal')
           JSON.stringify(finalMetadata, null, 2)
         );
 
-        await hre.run('ipfs-upload-file', {
+        await hre.run("ipfs-upload-file", {
           sourcepath: `./assets/generated/cards/${index}.json`,
           ipfspath: `/metadog/${index}.json`,
-          ipfsnode,
         });
 
         index++;
@@ -128,26 +118,25 @@ task('generate-assets', 'Generates everything needed to reveal')
     }
   );
 
-task('generate-asset', 'Generates a card image')
+task("generate-asset", "Generates a card image")
   .addParam<string>(
-    'subject',
-    'the name of the subject as used in the filename in the subjects folder'
+    "subject",
+    "the name of the subject as used in the filename in the subjects folder"
   )
-  .addParam<string>('rarity', 'the rarity of the card')
+  .addParam<string>("rarity", "the rarity of the card")
   .addParam<number>(
-    'cardindex',
-    'index for this card for this rarity',
+    "cardindex",
+    "index for this card for this rarity",
     1,
     types.int
   )
   .addParam<number>(
-    'totalcards',
-    'amount of cards per dog for this rarity',
+    "totalcards",
+    "amount of cards per dog for this rarity",
     10,
     types.int
   )
-  .addParam<number>('tokenId', 'the token id for this card', 1, types.int)
-  .addParam<string>('ipfsnode', 'the key of the ipfs node to use')
+  .addParam<number>("tokenId", "the token id for this card", 1, types.int)
   .setAction(
     async (
       {
@@ -156,14 +145,12 @@ task('generate-asset', 'Generates a card image')
         cardindex,
         totalcards,
         tokenId,
-        ipfsnode,
       }: {
         subject: string;
         rarity: string;
         cardindex: number;
         totalcards: number;
         tokenId: number;
-        ipfsnode: string;
       },
       hre
     ) => {
@@ -172,31 +159,31 @@ task('generate-asset', 'Generates a card image')
       );
 
       // create the directory structure
-      mkdirSync('./assets/generated/cards', { recursive: true });
+      mkdirSync("./assets/generated/cards", { recursive: true });
 
       // register the fonts
       registerFont(`./assets/layers/fonts/NotoSansMono-Medium.ttf`, {
-        family: 'NotoSansMono',
-        weight: 'normal',
-        style: 'normal',
+        family: "NotoSansMono",
+        weight: "normal",
+        style: "normal",
       });
       registerFont(`./assets/layers/fonts/PublicSans-Bold.ttf`, {
-        family: 'PublicSans',
-        weight: 'bold',
-        style: 'normal',
+        family: "PublicSans",
+        weight: "bold",
+        style: "normal",
       });
       registerFont(`./assets/layers/fonts/PublicSans-Medium.ttf`, {
-        family: 'PublicSans',
-        weight: 'normal',
-        style: 'normal',
+        family: "PublicSans",
+        weight: "normal",
+        style: "normal",
       });
 
       // get the background image dimensions
       const backgroundDimensions = sizeOf(
-        join('./assets/layers/backgrounds', `${rarity}.png`)
+        join("./assets/layers/backgrounds", `${rarity}.png`)
       );
       if (!backgroundDimensions.width || !backgroundDimensions.height) {
-        throw new Error('Could not get the dimensions of the image');
+        throw new Error("Could not get the dimensions of the image");
       }
 
       // setup the canvas
@@ -214,15 +201,15 @@ task('generate-asset', 'Generates a card image')
           : artMax
       );
       const canvas = createCanvas(width, height);
-      const ctx = canvas.getContext('2d');
+      const ctx = canvas.getContext("2d");
 
       // base background color
-      ctx.fillStyle = 'white';
+      ctx.fillStyle = "white";
       ctx.fillRect(0, 0, width, height);
 
       // draw background
       const backgroundImage = await loadImage(
-        join('./assets/layers/backgrounds', `${rarity}.png`)
+        join("./assets/layers/backgrounds", `${rarity}.png`)
       );
       ctx.drawImage(
         backgroundImage,
@@ -238,15 +225,15 @@ task('generate-asset', 'Generates a card image')
 
       // get the subject image dimensions
       const subjectDimensions = sizeOf(
-        join('./assets/layers/subjects', `${subject}.png`)
+        join("./assets/layers/subjects", `${subject}.png`)
       );
       if (!subjectDimensions.width || !subjectDimensions.height) {
-        throw new Error('Could not get the dimensions of the image');
+        throw new Error("Could not get the dimensions of the image");
       }
 
       // draw subject
       const subjectImage = await loadImage(
-        join('./assets/layers/subjects', `${subject}.png`)
+        join("./assets/layers/subjects", `${subject}.png`)
       );
       ctx.drawImage(
         subjectImage,
@@ -262,15 +249,15 @@ task('generate-asset', 'Generates a card image')
 
       // get the overlay image dimensions
       const overlayDimensions = sizeOf(
-        join('./assets/layers/overlays', `${rarity}.png`)
+        join("./assets/layers/overlays", `${rarity}.png`)
       );
       if (!overlayDimensions.width || !overlayDimensions.height) {
-        throw new Error('Could not get the dimensions of the image');
+        throw new Error("Could not get the dimensions of the image");
       }
 
       // draw overlay
       const overlayImage = await loadImage(
-        join('./assets/layers/overlays', `${rarity}.png`)
+        join("./assets/layers/overlays", `${rarity}.png`)
       );
       ctx.drawImage(
         overlayImage,
@@ -285,91 +272,91 @@ task('generate-asset', 'Generates a card image')
       );
 
       const metadata = JSON.parse(
-        readFileSync(`./assets/metadata/${subject}.json`, 'utf8')
+        readFileSync(`./assets/metadata/${subject}.json`, "utf8")
       );
 
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillStyle = 'white';
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillStyle = "white";
       ctx.font = `bold 60px PublicSans`;
       ctx.fillText(metadata.name, Math.round(width / 2), 480);
 
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillStyle = 'white';
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillStyle = "white";
       ctx.font = `normal 20px NotoSansMono`;
       ctx.fillText(`#${cardindex}/${totalcards}`, Math.round(width / 2), 530);
 
-      ctx.textAlign = 'end';
-      ctx.textBaseline = 'middle';
-      ctx.fillStyle = 'white';
+      ctx.textAlign = "end";
+      ctx.textBaseline = "middle";
+      ctx.fillStyle = "white";
       ctx.font = `normal 20px PublicSans`;
       ctx.fillText(
         metadata.attributes.find(
           (attr: { trait_type: string; value: string }) =>
-            attr.trait_type === 'Breed'
+            attr.trait_type === "Breed"
         )?.value,
         width - 20,
         30
       );
 
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillStyle = 'white';
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillStyle = "white";
       ctx.font = `normal 10px PublicSans`;
-      ctx.fillText('SHEDDING', 60, 590);
+      ctx.fillText("SHEDDING", 60, 590);
 
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillStyle = 'white';
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillStyle = "white";
       ctx.font = `normal 30px NotoSansMono`;
       ctx.fillText(
         `${
           metadata.attributes.find(
             (attr: { trait_type: string; value: string }) =>
-              attr.trait_type === 'Shedding'
+              attr.trait_type === "Shedding"
           )?.value
         }/5`,
         60,
         630
       );
 
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillStyle = 'white';
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillStyle = "white";
       ctx.font = `normal 10px PublicSans`;
-      ctx.fillText('AFFECTIONATE', Math.round(width / 2), 590);
+      ctx.fillText("AFFECTIONATE", Math.round(width / 2), 590);
 
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillStyle = 'white';
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillStyle = "white";
       ctx.font = `normal 30px NotoSansMono`;
       ctx.fillText(
         `${
           metadata.attributes.find(
             (attr: { trait_type: string; value: string }) =>
-              attr.trait_type === 'Affectionate'
+              attr.trait_type === "Affectionate"
           )?.value
         }/5`,
         Math.round(width / 2),
         630
       );
 
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillStyle = 'white';
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillStyle = "white";
       ctx.font = `normal 10px PublicSans`;
-      ctx.fillText('PLAYFULNESS', 360, 590);
+      ctx.fillText("PLAYFULNESS", 360, 590);
 
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillStyle = 'white';
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillStyle = "white";
       ctx.font = `normal 30px NotoSansMono`;
       ctx.fillText(
         `${
           metadata.attributes.find(
             (attr: { trait_type: string; value: string }) =>
-              attr.trait_type === 'Playfulness'
+              attr.trait_type === "Playfulness"
           )?.value
         }/5`,
         360,
@@ -378,7 +365,7 @@ task('generate-asset', 'Generates a card image')
 
       // save image
       await sharp(
-        canvas.toBuffer('image/png', {
+        canvas.toBuffer("image/png", {
           compressionLevel: 0,
           filters: canvas.PNG_FILTER_NONE,
         })
@@ -386,10 +373,10 @@ task('generate-asset', 'Generates a card image')
         .png({ compressionLevel: 4 })
         .toFile(`./assets/generated/cards/${tokenId}.png`);
 
-      return await hre.run('ipfs-upload-file', {
+      return await hre.run("ipfs-upload-file", {
         sourcepath: `./assets/generated/cards/${tokenId}.png`,
         ipfspath: `/metadog/${tokenId}.png`,
-        ipfsnode,
+
       });
     }
   );
