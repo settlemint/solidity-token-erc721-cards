@@ -25,12 +25,8 @@
   },
   "dependencies": {
     "@nomicfoundation/solidity-analyzer-linux-x64-gnu": "0.1.2",
-<<<<<<< HEAD
     "canvas": "2.11.2",
     "ethers": "6.13.1",
-=======
-    "ethers": "6.12.1",
->>>>>>> 44af43d (fix package)
     "image-size": "1.1.1",
     "ipfs-http-client": "55.0.0",
     "keccak256": "1.0.6",
