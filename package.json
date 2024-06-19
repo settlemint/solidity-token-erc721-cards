@@ -2,6 +2,10 @@
   "name": "solidity-token-erc721-cards",
   "version": "1.0.0",
   "description": "An ERC721 token contract with trading cards.",
+  "keywords": [
+    "solidity",
+    "subgraph"
+  ],
   "author": "SettleMint <hello@settlemint.com>",
   "license": "MIT",
   "devDependencies": {
