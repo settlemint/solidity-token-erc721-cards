@@ -26,5 +26,30 @@ const MetaDogReserve = buildModule('MetaDogReserve', (m) => {
   return { metadog };
 });
 
+const MetaDogPresale = buildModule('MetaDogPresale', (m) => {
+  const metadogAddress = m.getParameter('address');
+  const whitelistRoot = m.getParameter('whitelistRoot');
+  const metadog = m.contractAt('MetaDog', metadogAddress);
+  m.call(metadog, 'setWhitelistMerkleRoot', [whitelistRoot]);
+  return { metadog };
+});
+
+const MetaDogPublicSale = buildModule('MetaDogPublicSale', (m) => {
+  const metadogAddress = m.getParameter('address');
+  const metadog = m.contractAt('MetaDog', metadogAddress);
+  m.call(metadog, 'startPublicSale');
+
+  return { metadog };
+});
+
+const MetaDogReveal = buildModule('MetaDogReveal', (m) => {
+  const metadogAddress = m.getParameter('address');
+  const revealTokenURI = m.getParameter('revealTokenURI');
+  const metadog = m.contractAt('MetaDog', metadogAddress);
+
+  m.call(metadog, 'setBaseURI', [`ipfs://${revealTokenURI}/`]);
+  return { metadog };
+});
+
 export default MetaDogModule;
-export { MetaDogReserve };
+export { MetaDogReserve, MetaDogPresale, MetaDogPublicSale, MetaDogReveal };
