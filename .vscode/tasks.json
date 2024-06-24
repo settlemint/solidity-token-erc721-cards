@@ -12,7 +12,7 @@
       "description": "Extra commandline arguments, e.g. --verify",
       "type": "promptString",
       "default": ""
-    },
+    }
   ],
   "tasks": [
     {
@@ -67,7 +67,7 @@
       "type": "shell",
       "command": "btp-scs hardhat network",
       "problemMatcher": [],
-      "isBackground": true,
+      "isBackground": true
     },
     {
       "label": "Hardhat - Deploy to local network",
@@ -98,6 +98,36 @@
       "type": "shell",
       "command": "btp-scs subgraph deploy",
       "problemMatcher": []
+    },
+    {
+      "label": "Script - Deploy NFTs to IPFS",
+      "type": "shell",
+      "command": "npx hardhat run script/deploy.ts --network btp",
+      "problemMatcher": []
+    },
+    {
+      "label": "Script - Prepare NFT whitelist",
+      "type": "shell",
+      "command": "npx hardhat run script/whitelist.ts --network btp",
+      "problemMatcher": []
+    },
+    {
+      "label": "Script - Prepare NFT presale",
+      "type": "shell",
+      "command": "npx hardhat run script/presale.ts --network btp",
+      "problemMatcher": []
+    },
+    {
+      "label": "Script - Start public sale",
+      "type": "shell",
+      "command": "npx hardhat run script/publicSale.ts --network btp",
+      "problemMatcher": []
+    },
+    {
+      "label": "Script - Reveal",
+      "type": "shell",
+      "command": "npx hardhat run script/reveal.ts --network btp",
+      "problemMatcher": []
     }
-  ],
+  ]
 }
