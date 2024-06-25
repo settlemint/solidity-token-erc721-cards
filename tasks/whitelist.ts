@@ -1,20 +1,20 @@
-import { ethers } from 'ethers';
-import { readFileSync, writeFileSync } from 'fs';
-import { task } from 'hardhat/config';
-import keccak256 from 'keccak256';
-import MerkleTree from 'merkletreejs';
-import chalk from 'chalk';
+import chalk from "chalk";
+import { ethers } from "ethers";
+import { readFileSync, writeFileSync } from "fs";
+import { task } from "hardhat/config";
+import keccak256 from "keccak256";
+import MerkleTree from "merkletreejs";
 
-task('whitelist', 'Generates the whitelist MerkleRoot and proofs').setAction(
+task("whitelist", "Generates the whitelist MerkleRoot and proofs").setAction(
   async () => {
     const whitelist: Record<string, string> = JSON.parse(
-      readFileSync('./assets/whitelist.json', 'utf8')
+      readFileSync("./assets/whitelist.json", "utf8")
     );
 
-    console.log('');
+    console.log("");
     console.log(
       chalk.gray.dim(
-        '--------------------------------------------------------------------------'
+        "--------------------------------------------------------------------------"
       )
     );
     console.log(
@@ -27,9 +27,9 @@ task('whitelist', 'Generates the whitelist MerkleRoot and proofs').setAction(
     for (const [address, amount] of Object.entries(whitelist)) {
       whiteListLeaves[address] = Buffer.from(
         ethers
-          .solidityPackedKeccak256(['address', 'string'], [address, amount])
+          .solidityPackedKeccak256(["address", "string"], [address, amount])
           .slice(2),
-        'hex'
+        "hex"
       );
     }
 
@@ -53,7 +53,7 @@ task('whitelist', 'Generates the whitelist MerkleRoot and proofs').setAction(
     const whitelistRoot = whitelistTree.getHexRoot();
     console.log(`  Merkle Root: ${chalk.green.bold(whitelistRoot)}`);
     writeFileSync(
-      './assets/generated/whitelist.json',
+      "./assets/generated/whitelist.json",
       JSON.stringify(
         {
           root: whitelistRoot,
@@ -64,15 +64,15 @@ task('whitelist', 'Generates the whitelist MerkleRoot and proofs').setAction(
       )
     );
     console.log(
-      `  Export: ${chalk.green.bold('./assets/generated/whitelist.json')}`
+      `  Export: ${chalk.green.bold("./assets/generated/whitelist.json")}`
     );
 
     console.log(
       chalk.gray.dim(
-        '--------------------------------------------------------------------------'
+        "--------------------------------------------------------------------------"
       )
     );
-    console.log('');
+    console.log("");
 
     return {
       root: whitelistRoot,

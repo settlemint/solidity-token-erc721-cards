@@ -1,5 +1,5 @@
 import { createCanvas, loadImage, registerFont } from 'canvas';
-import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'fs';
+import { mkdirSync, readFileSync, readdirSync, writeFileSync } from 'fs';
 import { task, types } from 'hardhat/config';
 import sizeOf from 'image-size';
 import shuffle from 'lodash/shuffle';
@@ -10,18 +10,17 @@ task('generate-assets', 'Generates everything needed to reveal')
   .addParam<number>(
     'common',
     'the amount of commons to generate',
-    10,
+    20,
     types.int
   )
   .addParam<number>(
     'limited',
     'the amount of limited to generate',
-    5,
+    10,
     types.int
   )
-  .addParam<number>('rare', 'the amount of limited to generate', 2, types.int)
+  .addParam<number>('rare', 'the amount of limited to generate', 5, types.int)
   .addParam<number>('unique', 'the amount of limited to generate', 1, types.int)
-  .addParam<string>('ipfsnode', 'the key of the ipfs node to use')
   .setAction(
     async (
       {
@@ -29,13 +28,11 @@ task('generate-assets', 'Generates everything needed to reveal')
         limited,
         rare,
         unique,
-        ipfsnode,
       }: {
         common: number;
         limited: number;
         rare: number;
         unique: number;
-        ipfsnode: string;
       },
       hre
     ) => {
@@ -61,7 +58,7 @@ task('generate-assets', 'Generates everything needed to reveal')
             subject,
             rarity: 'limited',
             cardindex: limitedIndex,
-            totalcards: limited,
+            totalcards: common,
           });
         }
         for (let rareIndex = 1; rareIndex <= rare; rareIndex++) {
@@ -69,7 +66,7 @@ task('generate-assets', 'Generates everything needed to reveal')
             subject,
             rarity: 'rare',
             cardindex: rareIndex,
-            totalcards: rare,
+            totalcards: common,
           });
         }
         for (let uniqueIndex = 1; uniqueIndex <= unique; uniqueIndex++) {
@@ -92,7 +89,6 @@ task('generate-assets', 'Generates everything needed to reveal')
           cardindex,
           totalcards,
           tokenId: index,
-          ipfsnode,
         });
 
         const metadata = JSON.parse(
@@ -120,7 +116,6 @@ task('generate-assets', 'Generates everything needed to reveal')
         await hre.run('ipfs-upload-file', {
           sourcepath: `./assets/generated/cards/${index}.json`,
           ipfspath: `/metadog/${index}.json`,
-          ipfsnode,
         });
 
         index++;
@@ -147,7 +142,6 @@ task('generate-asset', 'Generates a card image')
     types.int
   )
   .addParam<number>('tokenId', 'the token id for this card', 1, types.int)
-  .addParam<string>('ipfsnode', 'the key of the ipfs node to use')
   .setAction(
     async (
       {
@@ -156,14 +150,12 @@ task('generate-asset', 'Generates a card image')
         cardindex,
         totalcards,
         tokenId,
-        ipfsnode,
       }: {
         subject: string;
         rarity: string;
         cardindex: number;
         totalcards: number;
         tokenId: number;
-        ipfsnode: string;
       },
       hre
     ) => {
@@ -324,12 +316,10 @@ task('generate-asset', 'Generates a card image')
       ctx.fillStyle = 'white';
       ctx.font = `normal 30px NotoSansMono`;
       ctx.fillText(
-        `${
-          metadata.attributes.find(
-            (attr: { trait_type: string; value: string }) =>
-              attr.trait_type === 'Shedding'
-          )?.value
-        }/5`,
+        `${metadata.attributes.find(
+          (attr: { trait_type: string; value: string }) =>
+            attr.trait_type === 'Shedding'
+        )?.value}/5`,
         60,
         630
       );
@@ -345,12 +335,10 @@ task('generate-asset', 'Generates a card image')
       ctx.fillStyle = 'white';
       ctx.font = `normal 30px NotoSansMono`;
       ctx.fillText(
-        `${
-          metadata.attributes.find(
-            (attr: { trait_type: string; value: string }) =>
-              attr.trait_type === 'Affectionate'
-          )?.value
-        }/5`,
+        `${metadata.attributes.find(
+          (attr: { trait_type: string; value: string }) =>
+            attr.trait_type === 'Affectionate'
+        )?.value}/5`,
         Math.round(width / 2),
         630
       );
@@ -366,12 +354,10 @@ task('generate-asset', 'Generates a card image')
       ctx.fillStyle = 'white';
       ctx.font = `normal 30px NotoSansMono`;
       ctx.fillText(
-        `${
-          metadata.attributes.find(
-            (attr: { trait_type: string; value: string }) =>
-              attr.trait_type === 'Playfulness'
-          )?.value
-        }/5`,
+        `${metadata.attributes.find(
+          (attr: { trait_type: string; value: string }) =>
+            attr.trait_type === 'Playfulness'
+        )?.value}/5`,
         360,
         630
       );
@@ -389,7 +375,6 @@ task('generate-asset', 'Generates a card image')
       return await hre.run('ipfs-upload-file', {
         sourcepath: `./assets/generated/cards/${tokenId}.png`,
         ipfspath: `/metadog/${tokenId}.png`,
-        ipfsnode,
       });
     }
   );

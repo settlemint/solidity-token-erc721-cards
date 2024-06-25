@@ -11,7 +11,7 @@ import {
   ERC721Token,
   ERC721TokenAttribute,
   ERC721TokenMetadata,
-} from '../generated/schema';
+} from '../../generated/schema';
 
 export function fetchERC721TokenIpfsMetadata(
   contractId: string,

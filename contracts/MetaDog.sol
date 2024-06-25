@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // SettleMint.com
 
-pragma solidity ^0.8.24;
+pragma solidity 0.8.26;
 
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 import { ERC721 } from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
@@ -87,6 +87,14 @@ contract MetaDog is
     function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
         string memory tokenUri = super.tokenURI(tokenId);
         return bytes(tokenUri).length > 0 ? string(abi.encodePacked(tokenUri, ".json")) : "";
+    }
+
+    function update(address to, uint256 tokenId, address auth)public returns(address) {
+        return _update(to, tokenId, auth);
+    }
+
+    function increaseBalance(address account, uint128 value) public {
+        _increaseBalance(account, value);
     }
 
     function _update(
