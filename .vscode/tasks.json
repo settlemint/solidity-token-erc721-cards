@@ -12,6 +12,42 @@
       "description": "Extra commandline arguments, e.g. --verify",
       "type": "promptString",
       "default": ""
+    },
+    {
+      "id": "deployment-script",
+      "description": "Hardhat deployment script",
+      "type": "promptString",
+      "default": "scripts/deploy.ts"
+    },
+    {
+      "id": "presale-script",
+      "description": "Hardhat deployment script",
+      "type": "promptString",
+      "default": "scripts/presale.ts"
+    },
+    {
+      "id": "reserved-script",
+      "description": "Hardhat deployment script",
+      "type": "promptString",
+      "default": "scripts/collectReserved.ts"
+    },
+    {
+      "id": "public-sale-script",
+      "description": "Hardhat deployment script",
+      "type": "promptString",
+      "default": "scripts/publicSale.ts"
+    },
+    {
+      "id": "whitelist-script",
+      "description": "Hardhat deployment script",
+      "type": "promptString",
+      "default": "scripts/whitelist.ts"
+    },
+    {
+      "id": "reveal-script",
+      "description": "Hardhat deployment script",
+      "type": "promptString",
+      "default": "scripts/reveal.ts"
     }
   ],
   "tasks": [
@@ -82,12 +118,6 @@
       "problemMatcher": []
     },
     {
-      "label": "Hardhat - Deploy to platform network",
-      "type": "shell",
-      "command": "btp-scs hardhat deploy remote ${input:extra-deployment} -m ${input:deployment-module}",
-      "problemMatcher": []
-    },
-    {
       "label": "Hardhat - Reset & Deploy to platform network",
       "type": "shell",
       "command": "btp-scs hardhat deploy remote --reset ${input:extra-deployment} -m ${input:deployment-module}",
@@ -100,33 +130,39 @@
       "problemMatcher": []
     },
     {
-      "label": "Script - Deploy NFTs to IPFS",
+      "label": "Hardhat - 01 - Deploy NFTs to IPFS",
       "type": "shell",
-      "command": "npx hardhat run script/deploy.ts --network btp",
+      "command": "btp-scs hardhat script remote -s ${input:deployment-script}",
       "problemMatcher": []
     },
     {
-      "label": "Script - Prepare NFT whitelist",
+      "label": "Hardhat - 02 - Collect reserved",
       "type": "shell",
-      "command": "npx hardhat run script/whitelist.ts --network btp",
+      "command": "btp-scs hardhat script remote -s ${input:reserved-script}",
       "problemMatcher": []
     },
     {
-      "label": "Script - Prepare NFT presale",
+      "label": "Hardhat - 03 - whitelist",
       "type": "shell",
-      "command": "npx hardhat run script/presale.ts --network btp",
+      "command": "btp-scs hardhat script remote -s ${input:whitelist-script}",
       "problemMatcher": []
     },
     {
-      "label": "Script - Start public sale",
+      "label": "Hardhat - 04 - Start presale",
       "type": "shell",
-      "command": "npx hardhat run script/publicSale.ts --network btp",
+      "command": "btp-scs hardhat script remote -s ${input:presale-script}",
       "problemMatcher": []
     },
     {
-      "label": "Script - Reveal",
+      "label": "Hardhat - 05 - Start public sale",
       "type": "shell",
-      "command": "npx hardhat run script/reveal.ts --network btp",
+      "command": "btp-scs hardhat script remote -s ${input:public-sale-script}",
+      "problemMatcher": []
+    },
+    {
+      "label": "Hardhat - 06 - reveal",
+      "type": "shell",
+      "command": "btp-scs hardhat script remote -s ${input:reveal-script}",
       "problemMatcher": []
     }
   ]

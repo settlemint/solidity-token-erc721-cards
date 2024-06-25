@@ -96,6 +96,7 @@ contract MetaDog is
     function increaseBalance(address account, uint128 value) public {
         _increaseBalance(account, value);
     }
+
     function _update(
         address to,
         uint256 tokenId,
