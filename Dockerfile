@@ -1,4 +1,4 @@
-FROM node:20.14.0-bookworm as build
+FROM node:20.15.0-bookworm as build
 
 RUN --mount=type=cache,sharing=locked,target=/var/cache/apt \
   export DEBIAN_FRONTEND=noninteractive && \
