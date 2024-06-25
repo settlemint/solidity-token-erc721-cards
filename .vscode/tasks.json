@@ -130,19 +130,19 @@
       "problemMatcher": []
     },
     {
-      "label": "Hardhat - 01 - Deploy NFTs to IPFS",
+      "label": "Hardhat - 01 - Deploy contract and upload NFTs to IPFS",
       "type": "shell",
       "command": "btp-scs hardhat script remote -s ${input:deployment-script}",
       "problemMatcher": []
     },
     {
-      "label": "Hardhat - 02 - Collect reserved",
+      "label": "Hardhat - 02 - Collect reserved tokens",
       "type": "shell",
       "command": "btp-scs hardhat script remote -s ${input:reserved-script}",
       "problemMatcher": []
     },
     {
-      "label": "Hardhat - 03 - whitelist",
+      "label": "Hardhat - 03 - create whitelist and set root",
       "type": "shell",
       "command": "btp-scs hardhat script remote -s ${input:whitelist-script}",
       "problemMatcher": []
@@ -160,7 +160,7 @@
       "problemMatcher": []
     },
     {
-      "label": "Hardhat - 06 - reveal",
+      "label": "Hardhat - 06 - reveal NFTs",
       "type": "shell",
       "command": "btp-scs hardhat script remote -s ${input:reveal-script}",
       "problemMatcher": []
