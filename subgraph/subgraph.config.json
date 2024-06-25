@@ -1,0 +1,18 @@
+{
+  "output": "generated/scs.",
+  "chain": "localhost",
+  "datasources": [
+    {
+      "name": "ExampleERC721",
+      "address": "0x0000000000000000000000000000000000000000",
+      "startBlock": 0,
+      "module": [
+        "erc721",
+        "pausable",
+        "ownable",
+        "erc721ipfs",
+        "erc721freezable"
+      ]
+    }
+  ]
+}
