@@ -8,9 +8,9 @@
  *
  * SPDX-License-Identifier: UNLICENSED
  */
-pragma solidity 0.8.26;
+pragma solidity ^0.8.24;
 
-import { ERC721Enumerable } from "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
+import {ERC721Enumerable} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 
 abstract contract ERC721Freezable is ERC721Enumerable {
     event PermanentURI(string _value, uint256 indexed _id);
@@ -54,12 +54,7 @@ abstract contract ERC721Freezable is ERC721Enumerable {
         address to,
         uint256 tokenId,
         address auth
-    )
-        internal
-        virtual
-        override(ERC721Enumerable)
-        returns (address)
-    {
+    ) internal virtual override(ERC721Enumerable) returns (address) {
         if (frozen()) {
             freezeToken(tokenId);
         }

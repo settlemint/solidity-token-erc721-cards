@@ -1,21 +1,21 @@
 // SPDX-License-Identifier: MIT
 // SettleMint.com
 
-pragma solidity 0.8.26;
+pragma solidity ^0.8.24;
 
-import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
-import { ERC721 } from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import { IERC721 } from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-import { ERC721Enumerable } from "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
-import { ERC721Pausable } from "@openzeppelin/contracts/token/ERC721/extensions/ERC721Pausable.sol";
-import { ERC721Burnable } from "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
-import { ReentrancyGuard } from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
-import { ERC721Royalty } from "@openzeppelin/contracts/token/ERC721/extensions/ERC721Royalty.sol";
-import { ERC721Whitelist } from "./extensions/ERC721Whitelist.sol";
-import { ERC721Freezable } from "./extensions/ERC721Freezable.sol";
-import { ERC721MintPausable } from "./extensions/ERC721MintPausable.sol";
-import { ERC721OpenSeaGassLess } from "./extensions/ERC721OpenSeaGassLess.sol";
-import { ERC721Batch } from "./extensions/ERC721Batch.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import {IERC721} from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import {ERC721Enumerable} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
+import {ERC721Pausable} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721Pausable.sol";
+import {ERC721Burnable} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
+import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import {ERC721Royalty} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721Royalty.sol";
+import {ERC721Whitelist} from "./extensions/ERC721Whitelist.sol";
+import {ERC721Freezable} from "./extensions/ERC721Freezable.sol";
+import {ERC721MintPausable} from "./extensions/ERC721MintPausable.sol";
+import {ERC721OpenSeaGassLess} from "./extensions/ERC721OpenSeaGassLess.sol";
+import {ERC721Batch} from "./extensions/ERC721Batch.sol";
 
 contract MetaDog is
     ERC721Enumerable,
@@ -76,7 +76,9 @@ contract MetaDog is
     // CORE FUNCTIONS                                               //
     //////////////////////////////////////////////////////////////////
 
-    function setBaseURI(string memory baseTokenURI_) public onlyOwner whenURINotFrozen {
+    function setBaseURI(
+        string memory baseTokenURI_
+    ) public onlyOwner whenURINotFrozen {
         _baseTokenURI = baseTokenURI_;
     }
 
@@ -84,12 +86,21 @@ contract MetaDog is
         return _baseTokenURI;
     }
 
-    function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
+    function tokenURI(
+        uint256 tokenId
+    ) public view virtual override returns (string memory) {
         string memory tokenUri = super.tokenURI(tokenId);
-        return bytes(tokenUri).length > 0 ? string(abi.encodePacked(tokenUri, ".json")) : "";
+        return
+            bytes(tokenUri).length > 0
+                ? string(abi.encodePacked(tokenUri, ".json"))
+                : "";
     }
 
-    function update(address to, uint256 tokenId, address auth)public returns(address) {
+    function update(
+        address to,
+        uint256 tokenId,
+        address auth
+    ) public returns (address) {
         return _update(to, tokenId, auth);
     }
 
@@ -104,14 +115,23 @@ contract MetaDog is
     )
         internal
         virtual
-        override(ERC721Enumerable, ERC721, ERC721Freezable, ERC721Pausable, ERC721MintPausable)
+        override(
+            ERC721Enumerable,
+            ERC721,
+            ERC721Freezable,
+            ERC721Pausable,
+            ERC721MintPausable
+        )
         returns (address)
     {
         // your code here
         return super._update(to, tokenId, auth);
     }
 
-    function _increaseBalance(address account, uint128 value) internal override(ERC721, ERC721Enumerable) {
+    function _increaseBalance(
+        address account,
+        uint128 value
+    ) internal override(ERC721, ERC721Enumerable) {
         super._increaseBalance(account, value);
     }
 
@@ -139,16 +159,31 @@ contract MetaDog is
     // WHITELIST SALE                                               //
     //////////////////////////////////////////////////////////////////
 
-    function setWhitelistMerkleRoot(bytes32 whitelistMerkleRoot_) external onlyOwner {
+    function setWhitelistMerkleRoot(
+        bytes32 whitelistMerkleRoot_
+    ) external onlyOwner {
         _setWhitelistMerkleRoot(whitelistMerkleRoot_);
     }
 
-    function whitelistMint(uint256 count, uint256 allowance, bytes32[] calldata proof) public payable nonReentrant {
+    function whitelistMint(
+        uint256 count,
+        uint256 allowance,
+        bytes32[] calldata proof
+    ) public payable nonReentrant {
         require(_tokenId > 0, "Reserves not taken yet");
         require(_tokenId + count <= MAX_SUPPLY, "Exceeds max supply");
-        require(_validateWhitelistMerkleProof(allowance, proof), "Invalid Merkle Tree proof supplied");
-        require(_addressToMinted[_msgSender()] + count <= allowance, "Exceeds whitelist allowance");
-        require(count * PRICE_IN_WEI_WHITELIST == msg.value, "Invalid funds provided");
+        require(
+            _validateWhitelistMerkleProof(allowance, proof),
+            "Invalid Merkle Tree proof supplied"
+        );
+        require(
+            _addressToMinted[_msgSender()] + count <= allowance,
+            "Exceeds whitelist allowance"
+        );
+        require(
+            count * PRICE_IN_WEI_WHITELIST == msg.value,
+            "Invalid funds provided"
+        );
         _addressToMinted[_msgSender()] += count;
         for (uint256 i; i < count; i++) {
             _mint(_msgSender(), ++_tokenId);
@@ -170,7 +205,10 @@ contract MetaDog is
         require(_tokenId > 0, "Reserves not taken yet");
         require(_tokenId + count <= MAX_SUPPLY, "Exceeds max supply");
         require(count < MAX_PER_TX, "Exceeds max per transaction");
-        require(count * PRICE_IN_WEI_PUBLIC == msg.value, "Invalid funds provided");
+        require(
+            count * PRICE_IN_WEI_PUBLIC == msg.value,
+            "Invalid funds provided"
+        );
 
         for (uint256 i; i < count; i++) {
             _mint(_msgSender(), ++_tokenId);
@@ -201,7 +239,9 @@ contract MetaDog is
     // GASLESS LISTING FOR OPENSEA                                  //
     //////////////////////////////////////////////////////////////////
 
-    function setProxyRegistryAddress(address proxyRegistryAddress_) external onlyOwner {
+    function setProxyRegistryAddress(
+        address proxyRegistryAddress_
+    ) external onlyOwner {
         _setProxyRegistryAddress(proxyRegistryAddress_);
     }
 
@@ -241,16 +281,22 @@ contract MetaDog is
     // ERC165                                                       //
     //////////////////////////////////////////////////////////////////
 
-    function supportsInterface(bytes4 interfaceId)
+    function supportsInterface(
+        bytes4 interfaceId
+    )
         public
         view
         virtual
         override(ERC721, ERC721Enumerable, ERC721Royalty)
         returns (bool)
     {
-        return interfaceId == type(Ownable).interfaceId || interfaceId == type(ERC721Burnable).interfaceId
-            || interfaceId == type(ERC721Enumerable).interfaceId || interfaceId == type(ERC721Whitelist).interfaceId
-            || interfaceId == type(ERC721Freezable).interfaceId || interfaceId == type(ERC721MintPausable).interfaceId
-            || super.supportsInterface(interfaceId);
+        return
+            interfaceId == type(Ownable).interfaceId ||
+            interfaceId == type(ERC721Burnable).interfaceId ||
+            interfaceId == type(ERC721Enumerable).interfaceId ||
+            interfaceId == type(ERC721Whitelist).interfaceId ||
+            interfaceId == type(ERC721Freezable).interfaceId ||
+            interfaceId == type(ERC721MintPausable).interfaceId ||
+            super.supportsInterface(interfaceId);
     }
 }

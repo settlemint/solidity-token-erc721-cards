@@ -8,9 +8,9 @@
  *
  * SPDX-License-Identifier: UNLICENSED
  */
-pragma solidity 0.8.26;
+pragma solidity ^0.8.24;
 
-import { ERC721 } from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 abstract contract ERC721MintPausable is ERC721 {
     bool private _mintingPaused;
@@ -44,9 +44,16 @@ abstract contract ERC721MintPausable is ERC721 {
         _mintingPaused = false;
     }
 
-    function _update(address to, uint256 tokenId, address auth) internal virtual override(ERC721) returns (address) {
+    function _update(
+        address to,
+        uint256 tokenId,
+        address auth
+    ) internal virtual override(ERC721) returns (address) {
         address from = super._update(to, tokenId, auth);
-        require((!mintPaused() || from != address(0)), "ERC721MintPausable: Minting is disabled");
+        require(
+            (!mintPaused() || from != address(0)),
+            "ERC721MintPausable: Minting is disabled"
+        );
         return from;
     }
 }

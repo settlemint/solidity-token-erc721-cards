@@ -1,12 +1,17 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.26;
+pragma solidity ^0.8.24;
 
 import "forge-std/Test.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "../contracts/extensions/ERC721OpenSeaGassLess.sol";  // Adjust the import path as necessary
+import "../contracts/extensions/ERC721OpenSeaGassLess.sol"; // Adjust the import path as necessary
 
 contract ERC721Mock is ERC721OpenSeaGassLess {
-    constructor(address proxyRegistryAddress_) ERC721OpenSeaGassLess(proxyRegistryAddress_) ERC721("MockERC721", "M721") {}
+    constructor(
+        address proxyRegistryAddress_
+    )
+        ERC721OpenSeaGassLess(proxyRegistryAddress_)
+        ERC721("MockERC721", "M721")
+    {}
 
     function mint(address to, uint256 tokenId) external {
         _mint(to, tokenId);
@@ -16,6 +21,7 @@ contract ERC721Mock is ERC721OpenSeaGassLess {
         _setProxyRegistryAddress(proxyRegistryAddress_);
     }
 }
+
 contract OpenSeaProxyRegistryMock is OpenSeaProxyRegistry {
     function setProxy(address owner, OwnableDelegateProxy proxy) external {
         proxies[owner] = proxy;
@@ -51,7 +57,10 @@ contract ERC721OpenSeaGassLessTest is Test {
         proxyRegistryMock.setProxy(owner, delegateProxy);
 
         // Now isApprovedForAll should return true for the proxy address
-        bool approved = erc721Mock.isApprovedForAll(owner, address(delegateProxy));
+        bool approved = erc721Mock.isApprovedForAll(
+            owner,
+            address(delegateProxy)
+        );
         assertEq(approved, true);
     }
 

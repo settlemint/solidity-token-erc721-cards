@@ -8,11 +8,11 @@
  *
  * SPDX-License-Identifier: UNLICENSED
  */
-pragma solidity 0.8.26;
+pragma solidity ^0.8.24;
 
-import { Context } from "@openzeppelin/contracts/utils/Context.sol";
-import { Strings } from "@openzeppelin/contracts/utils/Strings.sol";
-import { MerkleProof } from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
+import {Context} from "@openzeppelin/contracts/utils/Context.sol";
+import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
+import {MerkleProof} from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 
 abstract contract ERC721Whitelist is Context {
     bytes32 public _whitelistMerkleRoot;
@@ -21,22 +21,37 @@ abstract contract ERC721Whitelist is Context {
         _whitelistMerkleRoot = whitelistMerkleRoot_;
     }
 
-    function _leaf(string memory allowance, string memory payload) internal pure returns (bytes32) {
+    function _leaf(
+        string memory allowance,
+        string memory payload
+    ) internal pure returns (bytes32) {
         return keccak256(abi.encodePacked(payload, allowance));
     }
 
-    function _verify(bytes32 leaf, bytes32[] memory proof) internal view returns (bool) {
+    function _verify(
+        bytes32 leaf,
+        bytes32[] memory proof
+    ) internal view returns (bool) {
         require(_whitelistMerkleRoot != 0, "Whitelist merkle root not set");
         return MerkleProof.verify(proof, _whitelistMerkleRoot, leaf);
     }
 
-    function getAllowance(string memory allowance, bytes32[] calldata proof) public view returns (string memory) {
+    function getAllowance(
+        string memory allowance,
+        bytes32[] calldata proof
+    ) public view returns (string memory) {
         string memory payload = string(abi.encodePacked(_msgSender()));
-        require(_verify(_leaf(allowance, payload), proof), "Invalid Merkle Tree proof supplied.");
+        require(
+            _verify(_leaf(allowance, payload), proof),
+            "Invalid Merkle Tree proof supplied."
+        );
         return allowance;
     }
 
-    function _validateWhitelistMerkleProof(uint256 allowance, bytes32[] calldata proof) internal view returns (bool) {
+    function _validateWhitelistMerkleProof(
+        uint256 allowance,
+        bytes32[] calldata proof
+    ) internal view returns (bool) {
         string memory payload = string(abi.encodePacked(_msgSender()));
         return _verify(_leaf(Strings.toString(allowance), payload), proof);
     }
