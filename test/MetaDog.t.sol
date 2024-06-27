@@ -67,12 +67,12 @@ contract MetaDogTest is Test {
 
         vm.prank(owner);
         exampleERC721.setWhitelistMerkleRoot(
-            0xbc56477505b21fd7409dbc693cf9a006e29ec44e460308c25437bb647c3effb3
+            0xab0ad1fd11f066c49fc6a47ba91cb9e6acf73026b82a0907c282efbadefd10c2
         );
         bytes32[] memory proofOne = new bytes32[](1);
         proofOne[
             0
-        ] = 0xf2e82b3a90979175611bdde3e3ad666497bf331847d930e33a91a3602a44875b;
+        ] = 0xe49914a3a1644dc92d0362120e4111d4373036cf861e3da9358d6fadafdb64cc;
         uint256 count = 2;
         uint256 allowance = 2;
         vm.deal(
@@ -140,6 +140,7 @@ contract MetaDogTest is Test {
         vm.stopPrank();
         uint256 contractBalance = address(exampleERC721).balance;
         uint256 walletBalanceBefore = wallet.balance;
+        vm.startPrank(owner);
         exampleERC721.withdraw();
         uint256 walletBalanceAfter = wallet.balance;
         assertEq(walletBalanceAfter, walletBalanceBefore + contractBalance);

@@ -21,12 +21,20 @@ abstract contract ERC721Whitelist is Context {
         _whitelistMerkleRoot = whitelistMerkleRoot_;
     }
 
-    function _leaf(
-        string memory allowance,
-        string memory payload
-    ) internal pure returns (bytes32) {
-        return keccak256(abi.encodePacked(payload, allowance));
-    }
+   function _leaf(
+    address account,
+    string memory allowance
+) internal pure returns (bytes32) {
+    return keccak256(abi.encode(account, allowance));
+}
+
+function _validateWhitelistMerkleProof(
+    uint256 allowance,
+    bytes32[] calldata proof
+) internal view returns (bool) {
+    bytes32 leaf = _leaf(_msgSender(), Strings.toString(allowance));
+    return MerkleProof.verify(proof, _whitelistMerkleRoot, leaf);
+}
 
     function _verify(
         bytes32 leaf,
@@ -40,21 +48,13 @@ abstract contract ERC721Whitelist is Context {
         string memory allowance,
         bytes32[] calldata proof
     ) public view returns (string memory) {
-        string memory payload = string(abi.encodePacked(_msgSender()));
         require(
-            _verify(_leaf(allowance, payload), proof),
+            _verify(_leaf(msg.sender, allowance), proof),
             "Invalid Merkle Tree proof supplied."
         );
         return allowance;
     }
 
-    function _validateWhitelistMerkleProof(
-        uint256 allowance,
-        bytes32[] calldata proof
-    ) internal view returns (bool) {
-        string memory payload = string(abi.encodePacked(_msgSender()));
-        return _verify(_leaf(Strings.toString(allowance), payload), proof);
-    }
 
     function _disableWhitelistMerkleRoot() internal {
         delete _whitelistMerkleRoot;
