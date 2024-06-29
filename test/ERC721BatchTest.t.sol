@@ -63,7 +63,7 @@ contract ERC721BatchTest is Test {
 }
 
 contract ERC721Mock is ERC721Batch {
-    constructor() ERC721("MockERC721", "M721") {}
+    constructor() ERC721("MockERC721", "M721") { }
 
     function mint(address to, uint256 tokenId) external {
         _mint(to, tokenId);

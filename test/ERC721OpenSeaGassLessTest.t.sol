@@ -6,12 +6,10 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "../contracts/extensions/ERC721OpenSeaGassLess.sol"; // Adjust the import path as necessary
 
 contract ERC721Mock is ERC721OpenSeaGassLess {
-    constructor(
-        address proxyRegistryAddress_
-    )
+    constructor(address proxyRegistryAddress_)
         ERC721OpenSeaGassLess(proxyRegistryAddress_)
         ERC721("MockERC721", "M721")
-    {}
+    { }
 
     function mint(address to, uint256 tokenId) external {
         _mint(to, tokenId);
@@ -57,10 +55,7 @@ contract ERC721OpenSeaGassLessTest is Test {
         proxyRegistryMock.setProxy(owner, delegateProxy);
 
         // Now isApprovedForAll should return true for the proxy address
-        bool approved = erc721Mock.isApprovedForAll(
-            owner,
-            address(delegateProxy)
-        );
+        bool approved = erc721Mock.isApprovedForAll(owner, address(delegateProxy));
         assertEq(approved, true);
     }
 

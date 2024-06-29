@@ -10,7 +10,7 @@
  */
 pragma solidity ^0.8.24;
 
-import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import { ERC721 } from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 abstract contract ERC721OpenSeaGassLess is ERC721 {
     address public _proxyRegistryAddress;
@@ -19,20 +19,13 @@ abstract contract ERC721OpenSeaGassLess is ERC721 {
         _proxyRegistryAddress = proxyRegistryAddress_;
     }
 
-    function _setProxyRegistryAddress(
-        address proxyRegistryAddress_
-    ) internal virtual {
+    function _setProxyRegistryAddress(address proxyRegistryAddress_) internal virtual {
         _proxyRegistryAddress = proxyRegistryAddress_;
     }
 
-    function isApprovedForAll(
-        address _owner,
-        address operator
-    ) public view virtual override returns (bool) {
+    function isApprovedForAll(address _owner, address operator) public view virtual override returns (bool) {
         if (_proxyRegistryAddress != address(0)) {
-            OpenSeaProxyRegistry proxyRegistry = OpenSeaProxyRegistry(
-                _proxyRegistryAddress
-            );
+            OpenSeaProxyRegistry proxyRegistry = OpenSeaProxyRegistry(_proxyRegistryAddress);
             if (address(proxyRegistry.proxies(_owner)) == operator) {
                 return true;
             }
@@ -41,7 +34,7 @@ abstract contract ERC721OpenSeaGassLess is ERC721 {
     }
 }
 
-contract OwnableDelegateProxy {}
+contract OwnableDelegateProxy { }
 
 contract OpenSeaProxyRegistry {
     mapping(address => OwnableDelegateProxy) public proxies;

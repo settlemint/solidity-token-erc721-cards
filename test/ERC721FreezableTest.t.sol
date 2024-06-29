@@ -26,10 +26,7 @@ contract ERC721FreezableTest is Test {
     function testFreezeURI() public {
         vm.startPrank(owner);
         freezable.freeze();
-        assertTrue(
-            freezable.frozen(),
-            "URI should be frozen after calling freeze"
-        );
+        assertTrue(freezable.frozen(), "URI should be frozen after calling freeze");
         vm.stopPrank();
     }
 
@@ -72,7 +69,7 @@ contract ERC721FreezableMock is ERC721Freezable {
     uint256 private _tokenId;
     string private _baseTokenURI;
 
-    constructor() ERC721("Freezable Token", "FTK") {}
+    constructor() ERC721("Freezable Token", "FTK") { }
 
     function mint(address to, uint256 tokenId) public {
         _mint(to, tokenId);
@@ -90,21 +87,12 @@ contract ERC721FreezableMock is ERC721Freezable {
         return _baseTokenURI;
     }
 
-    function tokenURI(
-        uint256 tokenId
-    ) public view override returns (string memory) {
+    function tokenURI(uint256 tokenId) public view override returns (string memory) {
         string memory baseURI = _baseURI();
-        return
-            bytes(baseURI).length > 0
-                ? string(abi.encodePacked(baseURI, "/", tokenId))
-                : "";
+        return bytes(baseURI).length > 0 ? string(abi.encodePacked(baseURI, "/", tokenId)) : "";
     }
 
-    function update(
-        address to,
-        uint256 tokenId,
-        address auth
-    ) public returns (address) {
+    function update(address to, uint256 tokenId, address auth) public returns (address) {
         return _update(to, tokenId, auth);
     }
 }
