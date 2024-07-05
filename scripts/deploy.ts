@@ -1,5 +1,5 @@
 import hre from 'hardhat';
-import { default as MetaDogModule } from '../ignition/modules/MetaDog';
+import { default as MetaDogModule } from '../ignition/modules/main';
 
 import { network } from 'hardhat';
 
@@ -21,6 +21,7 @@ async function main() {
       MetaDogModule: { placeholder: placeholder, proxyaddress: proxyaddress },
     },
   });
+  console.log('Contract deployed');
 }
 
 main().catch(console.error);

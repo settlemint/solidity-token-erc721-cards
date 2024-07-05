@@ -1,6 +1,6 @@
 import { readFileSync } from 'fs';
 import hre, { network } from 'hardhat';
-import { MetaDogPublicSale } from '../ignition/modules/MetaDog';
+import { MetaDogReveal } from '../ignition/modules/main';
 
 async function main() {
   const collectionExists = await run('check-images');
@@ -10,7 +10,7 @@ async function main() {
   }
   const chainIdHex = await network.provider.send('eth_chainId');
   const chainId = String(parseInt(chainIdHex, 16));
-
+  const revealTokenURI = await run('reveal');
   try {
     const jsonData = JSON.parse(
       readFileSync(
@@ -19,9 +19,9 @@ async function main() {
       )
     );
     const address = jsonData['MetaDogModule#MetaDog'];
-    const { metadog } = await hre.ignition.deploy(MetaDogPublicSale, {
+    const { metadog } = await hre.ignition.deploy(MetaDogReveal, {
       parameters: {
-        MetaDogPublicSale: { address: address },
+        MetaDogReveal: { address: address, revealTokenURI: revealTokenURI },
       },
     });
   } catch (err) {

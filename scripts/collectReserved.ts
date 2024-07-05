@@ -1,6 +1,6 @@
 import { readFileSync } from 'fs';
 import hre, { network } from 'hardhat';
-import { MetaDogReserve } from '../ignition/modules/MetaDog';
+import { MetaDogReserve } from '../ignition/modules/main';
 
 async function main() {
   const collectionExists = await run('check-images');

@@ -13,6 +13,42 @@
       "type": "promptString",
       "default": ""
     },
+    {
+      "id": "deployment-script",
+      "description": "Hardhat deployment script",
+      "type": "promptString",
+      "default": "scripts/deploy.ts"
+    },
+    {
+      "id": "presale-script",
+      "description": "Hardhat deployment script",
+      "type": "promptString",
+      "default": "scripts/presale.ts"
+    },
+    {
+      "id": "reserved-script",
+      "description": "Hardhat deployment script",
+      "type": "promptString",
+      "default": "scripts/collectReserved.ts"
+    },
+    {
+      "id": "public-sale-script",
+      "description": "Hardhat deployment script",
+      "type": "promptString",
+      "default": "scripts/publicSale.ts"
+    },
+    {
+      "id": "whitelist-script",
+      "description": "Hardhat deployment script",
+      "type": "promptString",
+      "default": "scripts/whitelist.ts"
+    },
+    {
+      "id": "reveal-script",
+      "description": "Hardhat deployment script",
+      "type": "promptString",
+      "default": "scripts/reveal.ts"
+    }
   ],
   "tasks": [
     {
@@ -67,7 +103,7 @@
       "type": "shell",
       "command": "btp-scs hardhat network",
       "problemMatcher": [],
-      "isBackground": true,
+      "isBackground": true
     },
     {
       "label": "Hardhat - Deploy to local network",
@@ -79,12 +115,6 @@
       "label": "Hardhat - Reset & Deploy to local network",
       "type": "shell",
       "command": "btp-scs hardhat deploy local --reset ${input:extra-deployment} -m ${input:deployment-module}",
-      "problemMatcher": []
-    },
-    {
-      "label": "Hardhat - Deploy to platform network",
-      "type": "shell",
-      "command": "btp-scs hardhat deploy remote ${input:extra-deployment} -m ${input:deployment-module}",
       "problemMatcher": []
     },
     {
@@ -114,6 +144,42 @@
       "type": "shell",
       "command": "btp-scs subgraph deploy",
       "problemMatcher": []
+    },
+    {
+      "label": "Hardhat - 01 - Deploy contract and upload NFTs to IPFS",
+      "type": "shell",
+      "command": "btp-scs hardhat script remote -s ${input:deployment-script}",
+      "problemMatcher": []
+    },
+    {
+      "label": "Hardhat - 02 - Collect reserved tokens",
+      "type": "shell",
+      "command": "btp-scs hardhat script remote -s ${input:reserved-script}",
+      "problemMatcher": []
+    },
+    {
+      "label": "Hardhat - 03 - create whitelist",
+      "type": "shell",
+      "command": "btp-scs hardhat script remote -s ${input:whitelist-script}",
+      "problemMatcher": []
+    },
+    {
+      "label": "Hardhat - 04 - Start presale",
+      "type": "shell",
+      "command": "btp-scs hardhat script remote -s ${input:presale-script}",
+      "problemMatcher": []
+    },
+    {
+      "label": "Hardhat - 05 - Start public sale",
+      "type": "shell",
+      "command": "btp-scs hardhat script remote -s ${input:public-sale-script}",
+      "problemMatcher": []
+    },
+    {
+      "label": "Hardhat - 06 - reveal NFTs",
+      "type": "shell",
+      "command": "btp-scs hardhat script remote -s ${input:reveal-script}",
+      "problemMatcher": []
     }
-  ],
+  ]
 }
