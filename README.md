@@ -49,7 +49,7 @@ btp-scs foundry build
 or Hardhat:
 
 ```shell
-btp-scs foundry build
+btp-scs hardhat build
 ```
 
 ### Test
@@ -81,7 +81,7 @@ Trading cards are generated using Canvas. You can check the asset folder and set
 1. To deploy the smart contract and set the sale stage, we are using Hardhat scripts.
 
 ```shell
-btp-scs hardhat script remote -s <DEPLOYMENT_SCRIPT>
+btp-scs hardhat script remote -s <DEPLOYMENT_SCRIPT> (e.g. scripts/deploy.ts)
 ```
 
 2. Collect any reserved tokens:
@@ -118,6 +118,14 @@ btp-scs hardhat script remote -s <REVEAL>
 
 To index your smart contract events, use The Graph middleware.
 First, edit `subgraph.config.json` to set the addresses of your smart contracts. You can find them in the deployment folder created under `ignation`. Then, run:
+
+```shell
+btp-scs subgraph codegen
+```
+
+```shell
+btp-scs subgraph build
+```
 
 ```shell
 btp-scs subgraph deploy
